@@ -1,17 +1,54 @@
-import { Toast } from "react-hot-toast"
+import toast from 'react-hot-toast'
+// import { authenticate } from './helper'
 
 
 /** validate login page username */
 export async function usernameValidate(values) {
     const errors = usernameVerify({}, values);
 
-    if (values.username) {
-        // check user exist or not
-        const { status } = await authenticate(values.username);
+    // if (values.username) {
+    //     // check user exist or not
+    //     const { status } = await authenticate(values.username);
 
-        if (status !== 200) {
-            errors.exist = toast.error('User does not exist...!')
-        }
+    //     if (status !== 200) {
+    //         errors.exist = toast.error('User does not exist...!')
+    //     }
+    // }
+
+    return errors;
+}
+
+/** validate password */
+export async function passwordValidate(values) {
+    const errors = passwordVerify({}, values);
+
+    return errors;
+}
+
+/** validate reset password */
+export async function resetPasswordValidation(values) {
+    const errors = passwordVerify({}, values);
+
+    if (values.password !== values.confirm_pwd) {
+        errors.exist = toast.error("Password not match...!");
+    }
+
+    return errors;
+}
+
+/** validate password */
+function passwordVerify(errors = {}, values) {
+    /* eslint-disable no-useless-escape */
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+    if (!values.password) {
+        errors.password = toast.error("Password Required...!");
+    } else if (values.password.includes(" ")) {
+        errors.password = toast.error("Wrong Password...!");
+    } else if (values.password.length < 4) {
+        errors.password = toast.error("Password must be more than 4 characters long");
+    } else if (!specialChars.test(values.password)) {
+        errors.password = toast.error("Password must have special character");
     }
 
     return errors;
