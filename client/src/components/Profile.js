@@ -62,7 +62,7 @@ export default function Profile() {
                     <form className='py-1' onSubmit={formik.handleSubmit}>
                         <div className='profile flex justify-center py-4'>
                             <label htmlFor="profile">
-                                <img src={apiData?.profile || file || avatar} className={`${styles.profile_img} ${extend.profile_img}`} alt="avatar" />
+                                <img src={file || avatar} className={`${styles.profile_img} ${extend.profile_img}`} alt="avatar" />
                             </label>
 
                             <input onChange={onUpload} type="file" id='profile' name='profile' />
@@ -87,7 +87,7 @@ export default function Profile() {
                         </div>
 
                         <div className="text-center py-4">
-                            <span className='text-gray-500'>come back later? <button onClick={userLogout} className='text-red-500' to="/">Logout</button></span>
+                            <span className='text-gray-500'>come back later? <button className='text-red-500' to="/">Logout</button></span>
                         </div>
 
                     </form>
