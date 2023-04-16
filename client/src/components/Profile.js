@@ -1,41 +1,44 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
 import avatar from '../assets/profile.png';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { useFormik } from 'formik';
-import { profileValidation } from '../helper/validate'
-import convertToBase64 from '../helper/convert'
-import { useState } from "react";
-// import { extend } from 'lodash';
+import { profileValidation } from '../helper/validate';
+import convertToBase64 from '../helper/convert';
+import useFetch from '../hooks/fetch.hook';
+import { updateUser } from '../helper/helper'
+import { useNavigate } from 'react-router-dom'
 
-
-// import { usernameValidate } from '../helper/validate'
-// import { useAuthStore } from '../store/store'
-
-
-import styles from '../styles/Username.module.css'
+import styles from '../styles/Username.module.css';
 import extend from '../styles/Profile.module.css'
 
 export default function Profile() {
 
-    // const navigate = useNavigate()
-    const [file, setFile] = useState()
+    const [file, setFile] = useState();
+    const [{ isLoading, apiData, serverError }] = useFetch();
+    const navigate = useNavigate()
 
     const formik = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
-            email: 'ppuri7069@gmail.com',
-            mobile: '',
-            address: '',
-
+            firstName: apiData?.firstName || '',
+            lastName: apiData?.lastName || '',
+            email: apiData?.email || '',
+            mobile: apiData?.mobile || '',
+            address: apiData?.address || ''
         },
+        enableReinitialize: true,
         validate: profileValidation,
         validateOnBlur: false,
         validateOnChange: false,
         onSubmit: async values => {
-            values = await Object.assign(values, { profile: file || '' })
-            console.log(values);
+            values = await Object.assign(values, { profile: file || apiData?.profile || '' })
+            let updatePromise = updateUser(values);
+
+            toast.promise(updatePromise, {
+                loading: 'Updating...',
+                success: <b>Update Successfully...!</b>,
+                error: <b>Could not Update!</b>
+            });
+
         }
     })
 
@@ -44,6 +47,16 @@ export default function Profile() {
         const base64 = await convertToBase64(e.target.files[0]);
         setFile(base64);
     }
+
+    // logout handler function
+    function userLogout() {
+        localStorage.removeItem('token');
+        navigate('/')
+    }
+
+    if (isLoading) return <h1 className='text-2xl font-bold'>isLoading</h1>;
+    if (serverError) return <h1 className='text-xl text-red-500'>{serverError.message}</h1>
+
     return (
         <div className="container mx-auto">
 
@@ -62,7 +75,7 @@ export default function Profile() {
                     <form className='py-1' onSubmit={formik.handleSubmit}>
                         <div className='profile flex justify-center py-4'>
                             <label htmlFor="profile">
-                                <img src={file || avatar} className={`${styles.profile_img} ${extend.profile_img}`} alt="avatar" />
+                                <img src={apiData?.profile || file || avatar} className={`${styles.profile_img} ${extend.profile_img}`} alt="avatar" />
                             </label>
 
                             <input onChange={onUpload} type="file" id='profile' name='profile' />
@@ -87,7 +100,7 @@ export default function Profile() {
                         </div>
 
                         <div className="text-center py-4">
-                            <span className='text-gray-500'>come back later? <button className='text-red-500' to="/">Logout</button></span>
+                            <span className='text-gray-500'>come back later? <button onClick={userLogout} className='text-red-500' to="/">Logout</button></span>
                         </div>
 
                     </form>

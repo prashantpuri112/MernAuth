@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { usernameValidate } from '../helper/validate'
 import { useAuthStore } from '../store/store'
 
-import styles from '../styles/Username.module.css'
+import styles from '../styles/Username.module.css';
 
 export default function Username() {
 
@@ -15,7 +15,7 @@ export default function Username() {
 
     const formik = useFormik({
         initialValues: {
-            username: 'example'
+            username: 'example123'
         },
         validate: usernameValidate,
         validateOnBlur: false,
@@ -60,6 +60,5 @@ export default function Username() {
                 </div>
             </div>
         </div>
-
     )
 }

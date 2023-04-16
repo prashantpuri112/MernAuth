@@ -1,27 +1,24 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import avatar from '../assets/profile.png';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { useFormik } from 'formik';
-import { registerValidation } from '../helper/validate'
-import convertToBase64 from '../helper/convert'
-import { useState } from "react";
-
-// import { usernameValidate } from '../helper/validate'
-// import { useAuthStore } from '../store/store'
+import { registerValidation } from '../helper/validate';
+import convertToBase64 from '../helper/convert';
+import { registerUser } from '../helper/helper'
 
 
-import styles from '../styles/Username.module.css'
+import styles from '../styles/Username.module.css';
 
 export default function Register() {
 
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     const [file, setFile] = useState()
 
     const formik = useFormik({
         initialValues: {
-            email: 'ppuri7069@gmail.com',
-            username: 'example',
+            email: 'doyol56239@cnogs.com',
+            username: 'example123',
             password: 'admin@123'
         },
         validate: registerValidation,
@@ -29,7 +26,14 @@ export default function Register() {
         validateOnChange: false,
         onSubmit: async values => {
             values = await Object.assign(values, { profile: file || '' })
-            console.log(values);
+            let registerPromise = registerUser(values)
+            toast.promise(registerPromise, {
+                loading: 'Creating...',
+                success: <b>Register Successfully...!</b>,
+                error: <b>Could not Register.</b>
+            });
+
+            registerPromise.then(function () { navigate('/') });
         }
     })
 
@@ -45,17 +49,18 @@ export default function Register() {
             <Toaster position='top-center' reverseOrder={false}></Toaster>
 
             <div className='flex justify-center items-center h-screen'>
-                <div className={styles.glass} style={{ width: "45%" }}>
+                <div className={styles.glass} style={{ width: "45%", paddingTop: '3em' }}>
 
                     <div className="title flex flex-col items-center">
                         <h4 className='text-5xl font-bold'>Register</h4>
                         <span className='py-4 text-xl w-2/3 text-center text-gray-500'>
-                            Happy to join you!                        </span>
+                            Happy to join you!
+                        </span>
                     </div>
 
                     <form className='py-1' onSubmit={formik.handleSubmit}>
                         <div className='profile flex justify-center py-4'>
-                            <label htmlFor='profile'>
+                            <label htmlFor="profile">
                                 <img src={file || avatar} className={styles.profile_img} alt="avatar" />
                             </label>
 
@@ -63,9 +68,9 @@ export default function Register() {
                         </div>
 
                         <div className="textbox flex flex-col items-center gap-6">
-                            <input {...formik.getFieldProps('email')} className={styles.textbox} type="text" placeholder='Email' />
-                            <input {...formik.getFieldProps('username')} className={styles.textbox} type="text" placeholder='Username' />
-                            <input {...formik.getFieldProps('passowrd')} className={styles.textbox} type="password" placeholder='Password*' />
+                            <input {...formik.getFieldProps('email')} className={styles.textbox} type="text" placeholder='Email*' />
+                            <input {...formik.getFieldProps('username')} className={styles.textbox} type="text" placeholder='Username*' />
+                            <input {...formik.getFieldProps('password')} className={styles.textbox} type="text" placeholder='Password*' />
                             <button className={styles.btn} type='submit'>Register</button>
                         </div>
 
@@ -78,6 +83,5 @@ export default function Register() {
                 </div>
             </div>
         </div>
-
     )
 }
