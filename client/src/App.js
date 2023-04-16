@@ -12,7 +12,8 @@ import Reset from './components/Reset';
 import Username from './components/Username';
 
 
-
+//auth middleware
+import { AuthorizeUser, ProtectRoute } from './middleware/auth';
 
 /* Root routes */
 const router = createBrowserRouter([
@@ -34,7 +35,9 @@ const router = createBrowserRouter([
     },
     {
         path: '/profile',
-        element: <Profile>Profile Route</Profile>
+        element: <AuthorizeUser>
+            <Profile />
+        </AuthorizeUser >
     },
     {
         path: '*', // 404 Invalid Page
@@ -42,7 +45,9 @@ const router = createBrowserRouter([
     },
     {
         path: '/Password',
-        element: <Password>Password Route</Password>
+        element: <ProtectRoute>
+            <Password />
+        </ProtectRoute >
     },
 
 ])
