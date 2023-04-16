@@ -19,7 +19,7 @@ let transporter = nodemailer.createTransport(nodeConfig);
 
 let MailGenerator = new Mailgen({
     theme: "default",
-    product: {
+    product : {
         name: "Mailgen",
         link: 'https://mailgen.js/'
     }
@@ -38,9 +38,9 @@ export const registerMail = async (req, res) => {
 
     // body of the email
     var email = {
-        body: {
+        body : {
             name: username,
-            intro: text || 'Welcome to Daily Tuition! We\'re very excited to have you on board.',
+            intro : text || 'Welcome to Daily Tuition! We\'re very excited to have you on board.',
             outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
         }
     }
@@ -48,16 +48,16 @@ export const registerMail = async (req, res) => {
     var emailBody = MailGenerator.generate(email);
 
     let message = {
-        from: ENV.EMAIL,
+        from : ENV.EMAIL,
         to: userEmail,
-        subject: subject || "Signup Successful",
-        html: emailBody
+        subject : subject || "Signup Successful",
+        html : emailBody
     }
 
     // send mail
     transporter.sendMail(message)
         .then(() => {
-            return res.status(200).send({ msg: "You should receive an email from us." })
+            return res.status(200).send({ msg: "You should receive an email from us."})
         })
         .catch(error => res.status(500).send({ error }))
 

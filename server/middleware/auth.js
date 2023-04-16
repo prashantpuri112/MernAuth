@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import ENV from '../config.js'
 
 /** auth middleware */
-export default async function Auth(req, res, next) {
+export default async function Auth(req, res, next){
     try {
-
+        
         // access authorize header to validate request
         const token = req.headers.authorization.split(" ")[1];
 
@@ -16,15 +16,15 @@ export default async function Auth(req, res, next) {
         next()
 
     } catch (error) {
-        res.status(401).json({ error: "Authentication Failed!" })
+        res.status(401).json({ error : "Authentication Failed!"})
     }
 }
 
 
-export function localVariables(req, res, next) {
+export function localVariables(req, res, next){
     req.app.locals = {
-        OTP: null,
-        resetSession: false
+        OTP : null,
+        resetSession : false
     }
     next()
 }
