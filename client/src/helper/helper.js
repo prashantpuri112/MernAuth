@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import jwt_decode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 
 axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 
@@ -11,8 +11,8 @@ axios.defaults.baseURL = process.env.REACT_APP_SERVER_DOMAIN;
 export async function getUsername() {
     const token = localStorage.getItem('token')
     if (!token) return Promise.reject("Cannot find Token");
-    // let decode = jwt_decode(token)
-    // return decode;
+    let decode = jwt_decode(token)
+    return decode;
 }
 
 /** authenticate function */
@@ -24,7 +24,7 @@ export async function authenticate(username) {
     }
 }
 
-// /** get User details */
+/** get User details */
 export async function getUser({ username }) {
     try {
         const { data } = await axios.get(`/api/user/${username}`);
@@ -34,7 +34,7 @@ export async function getUser({ username }) {
     }
 }
 
-// /** register user function */
+/** register user function */
 export async function registerUser(credentials) {
     try {
         const { data: { msg }, status } = await axios.post(`/api/register`, credentials);
@@ -52,7 +52,7 @@ export async function registerUser(credentials) {
     }
 }
 
-// /** login function */
+/** login function */
 export async function verifyPassword({ username, password }) {
     try {
         if (username) {
@@ -64,7 +64,7 @@ export async function verifyPassword({ username, password }) {
     }
 }
 
-// /** update user profile function */
+/** update user profile function */
 export async function updateUser(response) {
     try {
 
@@ -77,7 +77,7 @@ export async function updateUser(response) {
     }
 }
 
-// /** generate OTP */
+/** generate OTP */
 export async function generateOTP(username) {
     try {
         const { data: { code }, status } = await axios.get('/api/generateOTP', { params: { username } });
@@ -94,7 +94,7 @@ export async function generateOTP(username) {
     }
 }
 
-// /** verify OTP */
+/** verify OTP */
 export async function verifyOTP({ username, code }) {
     try {
         const { data, status } = await axios.get('/api/verifyOTP', { params: { username, code } })
@@ -104,7 +104,7 @@ export async function verifyOTP({ username, code }) {
     }
 }
 
-// /** reset password */
+/** reset password */
 export async function resetPassword({ username, password }) {
     try {
         const { data, status } = await axios.put('/api/resetPassword', { username, password });

@@ -1,7 +1,6 @@
 import toast from 'react-hot-toast'
 import { authenticate } from './helper'
 
-
 /** validate login page username */
 export async function usernameValidate(values) {
     const errors = usernameVerify({}, values);
@@ -36,7 +35,6 @@ export async function resetPasswordValidation(values) {
     return errors;
 }
 
-
 /** validate register form */
 export async function registerValidation(values) {
     const errors = usernameVerify({}, values);
@@ -52,6 +50,8 @@ export async function profileValidation(values) {
     return errors;
 }
 
+
+/** ************************************************* */
 
 /** validate password */
 function passwordVerify(errors = {}, values) {
@@ -72,16 +72,16 @@ function passwordVerify(errors = {}, values) {
 }
 
 
-/* Validate username */
+/** validate username */
 function usernameVerify(error = {}, values) {
     if (!values.username) {
         error.username = toast.error('Username Required...!');
-    } else if (values.username.includes("")) {
-        error.username = toast.error('Invalid Username...!');
+    } else if (values.username.includes(" ")) {
+        error.username = toast.error('Invalid Username...!')
     }
-    return error
-}
 
+    return error;
+}
 
 /** validate email */
 function emailVerify(error = {}, values) {
