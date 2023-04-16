@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import connect from './database/conn.js';
 import router from './router/route.js';
 
-// Create an instance of the express app
 const app = express();
 
 /** middlewares */
@@ -37,3 +36,4 @@ connect().then(() => {
 }).catch(error => {
     console.log("Invalid database connection...!");
 })
+
